@@ -32,6 +32,16 @@ def insert_student(student_id, f_name, l_name, grade):
     cur.execute(f'INSERT INTO Students VALUES ({student_id},"{f_name}", "{l_name}", {grade})')
     con.commit()
 
+# only handles id, name, and grade as of now
+def edit_student(student_id, new_id, f_name, l_name, grade):
+    cur.execute("UPDATE Students SET id=?, first=?, last=?, gpa=? WHERE id=?", (new_id, f_name, l_name, grade, student_id))
+    con.commit()
+
+# delete's student and coursework
+def delete_student(student_id):
+    cur.execute(f"DELETE FROM Students WHERE id = {student_id}")
+    cur.execute(f"DELETE FROM Class_History WHERE student_id = {student_id}")
+
 
 def get_classes():
     classes = cur.execute("SELECT * FROM Classes").fetchall()
