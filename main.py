@@ -51,12 +51,27 @@ def insert_test_preferences():
     insert_preference(5, 2, 5)
     insert_preference(6, 2, 6)
     insert_preference(7, 2, 7)
+
+def insert_coursework():
+    #(student_id, class_name, credits, grade)
+    insert_class_history(1, "ELA 1", 3, "A")
+    insert_class_history(2, "Biology 1", 3, "B")
+    insert_class_history(3, "Geometry", 3, "C")
+    insert_class_history(1, "ELA 2", 3, "A")
+    insert_class_history(1, "ELA 3", 3, "B")
+    insert_class_history(3, "World History", "1", "A")
+    insert_class_history(2, "Economics", "0.5", "B")
+    insert_class_history(3, "Algebra 1", "3", "B")
+    insert_class_history(2, "Biology 2", "3", "B")
+
     
 def main():
     # Insert test data
     insert_test_students()
     insert_test_classes()
     insert_test_preferences()
+    insert_coursework()
+
 
     #UI
     app = QApplication(sys.argv)

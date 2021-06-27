@@ -3,7 +3,7 @@ import sqlite3
 
 try:
     con = sqlite3.connect('SchoolScheduler.db')
-    con.row_factory = sqlite3.Row
+    #con.row_factory = sqlite3.Row
     cur = con.cursor()
 except sqlite3.Error as e:
     print(e)
@@ -13,6 +13,7 @@ def db_init():
     cur.execute('''CREATE TABLE IF NOT EXISTS Classes (id integer, name text, period integer, capacity integer)''')
     cur.execute('''CREATE TABLE IF NOT EXISTS Schedules (class_id integer, student_id integer, period integer)''')
     cur.execute('''CREATE TABLE IF NOT EXISTS Preferences (class_id integer, student_id integer, period integer)''')
+    cur.execute('''CREATE TABLE IF NOT EXISTS Class_History (student_id integer, class text, credit real, grade text)''')
     con.commit()
 
 
@@ -22,8 +23,9 @@ def db_close():
 
 def get_students():
     students = cur.execute("SELECT * FROM Students").fetchall()
-    for s in students:
-        print(dict(s))
+    #for s in students:
+        #print(dict(s))
+    return students
 
 
 def insert_student(student_id, f_name, l_name, grade):
@@ -33,8 +35,8 @@ def insert_student(student_id, f_name, l_name, grade):
 
 def get_classes():
     classes = cur.execute("SELECT * FROM Classes").fetchall()
-    for c in classes:
-        print(dict(c))
+    #for c in classes:
+    #    print(dict(c))
     return classes
 
 
@@ -50,8 +52,9 @@ def insert_schedule(class_id, student_id, period):
 
 def get_schedules():
     schedules = cur.execute("SELECT * FROM Schedules").fetchall()
-    for schedule in schedules:
-        print(dict(schedule))
+    #for schedule in schedules:
+    #    print(dict(schedule))
+    return schedules
 
 
 def insert_preference(class_id, student_id, period):
@@ -73,14 +76,27 @@ def course_available(course_id, student_id, period):
     course = cur.execute(f'SELECT * FROM Classes WHERE id = {course_id} AND period = {period} LIMIT 1').fetchone()
     if (len(course) < 1):
         return False
-    capacity = dict(course)['capacity']
+    #capacity = dict(course)['capacity']
+    capacity = course[3]
     enrolled_count = cur.execute(f'SELECT Count(*) FROM Schedules WHERE class_id = {course_id} AND student_id = {student_id} AND period = {period}').fetchone()[0]
     if enrolled_count >= capacity:
         return False
     return True
+
+
+def insert_class_history(student_id, name, credit, grade):
+    cur.execute(f'INSERT INTO Class_History VALUES ({student_id}, "{name}", {credit}, "{grade}")')
+    con.commit()
+
+
+def get_class_history(student_id):
+    classes = cur.execute(f"SELECT * FROM Class_History WHERE student_id = {student_id}").fetchall()
+    return classes
+
 
 def delete_all():
     con.execute("DELETE FROM Students")
     con.execute("DELETE FROM Classes")
     con.execute("DELETE FROM Preferences")
     con.execute("DELETE FROM Schedules")
+    con.execute("DELETE FROM Class_History")
