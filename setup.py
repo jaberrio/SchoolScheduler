@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 setuptools.setup(
     name="SchoolScheduler",
     version="1.0.0",
-    author="Michael Berry",
+    author="Julian Berrio, Megan Quinn, Navid Ali, Justin Miller, Michael Berry",
     author_email="michael.berry@ufl.edu",
     description="Python School Scheduler",
     long_description=long_description,
