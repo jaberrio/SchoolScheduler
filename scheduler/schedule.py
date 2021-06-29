@@ -2,7 +2,7 @@ import math
 
 from reportlab.pdfgen.canvas import Canvas
 
-from scheduler.db import *
+from db import *
 
 
 # assume that each class offering has the same id but can be multiple periods
