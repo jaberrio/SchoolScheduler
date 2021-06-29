@@ -9,7 +9,7 @@ Easy PDF export for mass printing
 Keeps Track of Students Graduation Requirement to Recommend schedules
 Easily make modifications using our intuitive UI
 
-pip information TBA
+To install dependencies use `pip install SchoolScheduler` this will install the reportlab and PyQt5 dependencies. 
 
 How to use program
 ***NOTE Current Beta Modifications***
