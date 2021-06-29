@@ -3,9 +3,9 @@ import sys
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication
 
-from scheduler import schedulerui
-from scheduler.schedule import *
-from scheduler.wsl import *
+import schedulerui
+from schedule import *
+from wsl import *
 
 
 class SchoolScheduler(QtWidgets.QMainWindow, schedulerui.Ui_MainWindow):
