@@ -1,0 +1,9 @@
+README.md
+pyproject.toml
+setup.py
+SchoolScheduler.egg-info/PKG-INFO
+SchoolScheduler.egg-info/SOURCES.txt
+SchoolScheduler.egg-info/dependency_links.txt
+SchoolScheduler.egg-info/entry_points.txt
+SchoolScheduler.egg-info/requires.txt
+SchoolScheduler.egg-info/top_level.txt

@@ -1,0 +1,3 @@
+[console_scripts]
+play_scheduler = scheduler:main
+
