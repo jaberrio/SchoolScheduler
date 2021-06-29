@@ -9,8 +9,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QDialog
 
-from scheduler.db import *
-from scheduler.schedule import generate_schedule
+from db import *
+from schedule import generate_schedule
 
 
 class Ui_MainWindow(object):
