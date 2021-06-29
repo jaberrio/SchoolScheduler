@@ -11,6 +11,9 @@ Easily make modifications using our intuitive UI
 
 To install dependencies use `pip install SchoolScheduler` this will install the reportlab and PyQt5 dependencies. 
 
+To run the program use `python3 main.py` located inside \scheduler
+Note if running under wsl xserver must be running.
+
 How to use program
 ***NOTE Current Beta Modifications***
 Student data is artificially generated upto 100 students for performance until we migrate algorithm to C++
