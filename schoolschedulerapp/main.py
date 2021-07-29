@@ -3,10 +3,10 @@ import sys
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication
 
-import schedulerui
-from schedule import *
-from wsl import *
-from generatedata import *
+import schoolschedulerapp.schedulerui as schedulerui
+from schoolschedulerapp.schedule import *
+from schoolschedulerapp.wsl import *
+from schoolschedulerapp.generatedata import *
 
 class SchoolScheduler(QtWidgets.QMainWindow, schedulerui.Ui_MainWindow):
     def __init__(self, parent=None):
@@ -22,6 +22,9 @@ def start_gui():
 
 
 def main():
+    db_purge()
+    db_init()
+
     # UI
     set_display_to_host()
 
@@ -32,10 +35,4 @@ def main():
 
 
 if __name__ == '__main__':
-    # purge fixes fresh start up bug
-    # TODO REMOVE COMMENT OUT TO ALLOW PURGE
-    db_purge()
-
-    db_init()
     main()
-    db_close()

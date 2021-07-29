@@ -6,7 +6,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.lib.units import inch
 from reportlab.platypus import Table, TableStyle
 from reportlab.lib import colors
-from db_alchemy import *
+from schoolschedulerapp.db_alchemy import *
 
 
 # assume that each class offering has the same id but can be multiple periods
