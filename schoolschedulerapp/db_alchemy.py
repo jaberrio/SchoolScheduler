@@ -78,7 +78,7 @@ class Class(Base):
     @staticmethod
     def get_all():
         query = session.query(Class)
-        return session.execute(query).all()
+        return session.execute(query).scalars().all()
 
     @staticmethod
     def by_id(id):
@@ -141,7 +141,7 @@ class Schedule(Base):
     @staticmethod
     def get_all():
         query = session.query(Schedule)
-        return session.execute(query).all()
+        return session.execute(query).scalars().all()
 
     @staticmethod
     def insert(student_id, class_id, period):
