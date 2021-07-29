@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="SchoolSchedulerApp",
-    version="2.0.0",
+    version="2.0.1",
     author="Julian Berrio, Megan Quinn, Navid Ali, Justin Miller, Michael Berry",
     author_email="miller.j@ufl.edu",
     packages=['schoolschedulerapp'],
