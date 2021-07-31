@@ -99,7 +99,6 @@ class Class(Base):
     @staticmethod
     def insert(id, course_id, period):
         session.add(Class(id=id, course_id=course_id, period=period))
-        session.commit()
 
 
 class Course(Base):
@@ -122,7 +121,11 @@ class Course(Base):
     @staticmethod
     def insert(id, name, type, capacity):
         session.add(Course(id=id, name=name, type=type, capacity=capacity))
-        session.commit()
+
+    @staticmethod
+    def by_name(name):
+        query = session.query(Course).where(Course.name == name)
+        return session.execute(query).scalar()
 
     @staticmethod
     def available(id, period, student_id):
@@ -152,7 +155,6 @@ class Schedule(Base):
     @staticmethod
     def insert(student_id, class_id, period):
         session.add(Schedule(student_id=student_id, class_id=class_id, period=period))
-        session.commit()
 
     @staticmethod
     def by_student_id(student_id):

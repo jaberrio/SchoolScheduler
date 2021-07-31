@@ -89,12 +89,12 @@ class Ui_MainWindow(object):
         self.id_edit = QtWidgets.QLineEdit(self.frame)
         self.id_edit.setGeometry(QtCore.QRect(265, 20, 85, 16))
         self.id_edit.setObjectName("id_edit")
-        self.grade_edit = QtWidgets.QLineEdit(self.frame)
-        self.grade_edit.setGeometry(QtCore.QRect(515, 20, 32, 16))
-        self.grade_edit.setObjectName("grade_edit")
-        self.credits_edit = QtWidgets.QLineEdit(self.frame)
-        self.credits_edit.setGeometry(QtCore.QRect(645, 20, 32, 16))
-        self.credits_edit.setObjectName("credits_edit")
+        # self.grade_edit = QtWidgets.QLineEdit(self.frame)
+        # self.grade_edit.setGeometry(QtCore.QRect(515, 20, 32, 16))
+        # self.grade_edit.setObjectName("grade_edit")
+        # self.credits_edit = QtWidgets.QLineEdit(self.frame)
+        # self.credits_edit.setGeometry(QtCore.QRect(645, 20, 32, 16))
+        # self.credits_edit.setObjectName("credits_edit")
         self.gpa_edit = QtWidgets.QLineEdit(self.frame)
         self.gpa_edit.setGeometry(QtCore.QRect(720, 20, 32, 16))
         self.gpa_edit.setObjectName("gpa_edit")
@@ -560,8 +560,8 @@ class Ui_MainWindow(object):
         self.name_edit.hide()
         self.id_edit.hide()
         self.grade_edit.hide()
-        self.credits_edit.hide()
-        self.gpa_edit.hide()
+        # self.credits_edit.hide()
+        # self.gpa_edit.hide()
         self.pref1edit.hide()
         self.pref2edit.hide()
         self.pref3edit.hide()
@@ -576,8 +576,8 @@ class Ui_MainWindow(object):
     def show_edit_elements(self):
         self.name_edit.show()
         self.id_edit.show()
-        self.grade_edit.show()
-        self.credits_edit.show()
+        # self.grade_edit.show()
+        # self.credits_edit.show()
         self.gpa_edit.show()
         self.pref1edit.show()
         self.pref2edit.show()
@@ -593,7 +593,12 @@ class Ui_MainWindow(object):
         self.clear_shown_student()
         self.clear_edit_fields()
         self.show_edit_elements()
-        self.check_box_enabled(True)
+        self.tableWidget.clear()
+        self.tableWidget.setEditTriggers(QtWidgets.QAbstractItemView.AllEditTriggers)
+        self.tableWidget.setHorizontalHeaderItem(0, QtWidgets.QTableWidgetItem("Name"))
+        self.tableWidget.setHorizontalHeaderItem(1, QtWidgets.QTableWidgetItem("Credits"))
+        self.tableWidget.setHorizontalHeaderItem(2, QtWidgets.QTableWidgetItem("Grade"""))
+        #self.check_box_enabled(True)
 
     def enter_edit_mode(self):
 
@@ -603,21 +608,22 @@ class Ui_MainWindow(object):
                 session.delete(Student.by_id(int(self.id.text().split(' ')[2])))
                 self.clear_shown_student()
             self.show_edit_elements()
-            self.check_box_enabled(True)
+            #self.check_box_enabled(True)
 
     def set_edit_elements(self):
         self.name_edit.setText(self.name.text().split(" ")[1] + " " + self.name.text().split(" ")[2])
         self.id_edit.setText(self.id.text().split(" ")[2])
         self.grade_edit.setText(self.grade.text().split(" ")[1])
-        self.credits_edit.setText(self.num_credits.text().split(" ")[2]) # should be 2 but credits are not being set
-        self.gpa_edit.setText(self.gpa.text().split(" ")[1])
-        self.pref1edit.setText(self.preference1.text().split(" ")[1])
-        self.pref2edit.setText(self.preference2.text().split(" ")[1])
-        self.pref3edit.setText(self.preference3.text().split(" ")[1])
-        self.pref4edit.setText(self.preference4.text().split(" ")[1])
-        self.pref5edit.setText(self.preference5.text().split(" ")[1])
-        self.pref6edit.setText(self.preference6.text().split(" ")[1])
-        self.pref7edit.setText(self.preference7.text().split(" ")[1])
+        # self.credits_edit.setText(self.num_credits.text().split(" ")[2]) # should be 2 but credits are not being set
+        # self.gpa_edit.setText(self.gpa.text().split(" ")[1])
+        self.pref1edit.setText(" ".join(self.preference1.text().split(" ")[1:]))
+        self.pref2edit.setText(" ".join(self.preference2.text().split(" ")[1:]))
+        self.pref3edit.setText(" ".join(self.preference3.text().split(" ")[1:]))
+        self.pref4edit.setText(" ".join(self.preference4.text().split(" ")[1:]))
+        self.pref5edit.setText(" ".join(self.preference5.text().split(" ")[1:]))
+        self.pref6edit.setText(" ".join(self.preference6.text().split(" ")[1:]))
+        self.pref7edit.setText(" ".join(self.preference7.text().split(" ")[1:]))
+        self.tableWidget.setEditTriggers(QtWidgets.QAbstractItemView.AllEditTriggers)
 
     def clear_shown_student(self):
         self.name.setText("Name: ")
@@ -637,8 +643,8 @@ class Ui_MainWindow(object):
         self.name_edit.setText("")
         self.id_edit.setText("")
         self.grade_edit.setText("")
-        self.gpa_edit.setText("")
-        self.credits_edit.setText("")
+        # self.gpa_edit.setText("")
+        # self.credits_edit.setText("")
         self.pref1edit.setText("")
         self.pref2edit.setText("")
         self.pref3edit.setText("")
@@ -656,6 +662,7 @@ class Ui_MainWindow(object):
         self.clear_edit_fields()
         self.hide_edit_elements()
         self.check_box_enabled(False)
+        self.tableWidget.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
 
     def search_mode(self, name, index):
         if index == 0:
@@ -671,8 +678,17 @@ class Ui_MainWindow(object):
     def create_new_student(self):
         name = self.name_edit.text()
         first_last = name.split(" ", 2)
-        Student.insert(int(self.id_edit.text()), first_last[0], first_last[1], float(self.grade_edit.text()))
+        s = Student.by_id(int(self.id_edit.text()))
+        if s != None:
+            s.first = first_last[0]
+            s.last = first_last[1]
+            s.grade = float(self.grade_edit.text())
+        else:
+            Student.insert(int(self.id_edit.text()), first_last[0], first_last[1], float(self.grade_edit.text()))
+        self.save_course_history(int(self.id_edit.text()))
+        self.save_preferences(int(self.id_edit.text()))
         self.clear_edit_fields()
+        self.tableWidget.clear()
         self.refresh_list()
 
     def refresh_list(self):
@@ -930,6 +946,7 @@ class Ui_MainWindow(object):
 
     # Search should also apply to teachers in future
     def search_by_id_tree_select(self, id_request):
+        self.clear_shown_student()
         students_list = Student.get_all()
         course_list = Course.get_all()
         self.tableWidget.clear()
@@ -955,10 +972,11 @@ class Ui_MainWindow(object):
 
                 x = 0
 
-                for p in qline:
-                    course_id = pref[x].course_id
-                    qline[x].setText(str(x + 1) + '. ' + str(Course.by_id(course_id).name))
-                    x += 1
+                for p in pref:
+                    if x < 7:
+                        course_id = pref[x].course_id
+                        qline[x].setText(str(x + 1) + '. ' + str(Course.by_id(course_id).name))
+                        x += 1
 
                 self.load_grad_requirements(student.id)
 
@@ -979,6 +997,7 @@ class Ui_MainWindow(object):
                     self.tableWidget.setItem(index, 1, QtWidgets.QTableWidgetItem(str(c.credit)))
                     self.tableWidget.setItem(index, 2, QtWidgets.QTableWidgetItem(str(c.grade)))
                     index += 1
+                self.tableWidget.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
 
     def load_grad_requirements(self, id):
         self.clear_grad_requirements()
@@ -1039,6 +1058,43 @@ class Ui_MainWindow(object):
         self.checkBox_art.setChecked(False)
         self.checkBox_pe.setChecked(False)
         self.checkBox_online.setChecked(False)
+
+    def save_course_history(self, student_id):
+        rows = self.tableWidget.rowCount()
+
+        classes = Class_History.by_student_id(student_id)
+        for c in classes:
+            c.class_name = self.tableWidget.item(len(classes)-rows, 0).text()
+            c.credit = int(self.tableWidget.item(len(classes)-rows, 1).text())
+            c.grade = self.tableWidget.item(len(classes)-rows, 2).text()
+            rows -= 1
+
+        for i in range(rows):
+            if self.tableWidget.item(i, 0) != None and self.tableWidget.item(i, 1) != None and self.tableWidget.item(i,2) != None and \
+                    self.tableWidget.item(i, 0).text() != '' and self.tableWidget.item(i, 1).text() != '' and self.tableWidget.item(i, 2).text() != '':
+                Class_History.insert(student_id, self.tableWidget.item(i, 0).text(), int(self.tableWidget.item(i, 1).text()), self.tableWidget.item(i, 2).text())
+        Student.update_computed(student_id)
+
+    def save_preferences(self, student_id):
+        preferences = Preference.by_student_id(student_id)
+        qline = [self.pref1edit, self.pref2edit, self.pref3edit, self.pref4edit, self.pref5edit, self.pref6edit,
+                 self.pref7edit]
+
+        # try to update existing preferences
+        index = 0
+        for p in preferences:
+            if qline[7 - len(qline) - index].text() != None and Course.by_name(qline[0].text()) != None:
+                p.course_id = Course.by_name(qline[7 - len(qline) - index].text()).id
+                qline.pop(7 - len(qline) - index)
+                index += 1
+
+        # update remaining
+        idx = 0
+        for q in qline:
+            if q.text() != '' and Course.by_name(q.text()) != None:
+                Preference.insert(Course.by_name(q.text()).id, student_id, len(preferences) + idx)
+                idx += 1
+        session.commit()
 
 # self.checkBox_fsa_ela.setEnabled = True
 # self.checkBox_fsa_algebra.setEnabled = True
