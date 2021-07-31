@@ -1,5 +1,6 @@
 import xlsxwriter
 import random
+import schoolschedulerapp
 
 def write_tuple(worksheet, data, row):
     col = 0
@@ -9,7 +10,7 @@ def write_tuple(worksheet, data, row):
 
 
 def generate_test_data():
-    workbook = xlsxwriter.Workbook('import/Data.xlsx')
+    workbook = xlsxwriter.Workbook(str(schoolschedulerapp.__file__)[0:-12] + '/import/Data.xlsx')
     insert_test_students(workbook)
     insert_test_courses(workbook)
     insert_test_preferences(workbook)
@@ -20,7 +21,7 @@ def insert_test_students(workbook):
     worksheet_students = workbook.add_worksheet("Students")
     worksheet_coursework = workbook.add_worksheet("Coursework")
     # (id, first, last, GPA)
-    words = open('words.txt', 'r')
+    words = open(str(schoolschedulerapp.__file__)[0:-12] + '/words.txt', 'r')
     lines = words.read().splitlines()
 
     coursework_row = 0

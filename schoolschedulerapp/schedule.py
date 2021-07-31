@@ -9,7 +9,7 @@ from reportlab.pdfgen.canvas import Canvas
 from reportlab.platypus import Table, TableStyle
 from schoolschedulerapp.db_alchemy import *
 
-from cytpes import *
+from ctypes import *
 
 # assume that each class offering has the same id but can be multiple periods
 def generate_schedule():
