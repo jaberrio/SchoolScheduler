@@ -857,7 +857,7 @@ class Ui_MainWindow(object):
         import_dialog.show()
 
     def open_export_dialog(self):
-        if not os.path.isfile("./import/Data.xlsx"):
+        if not os.path.isfile(str(schoolschedulerapp.__file__)[0:-12] + "/import/Data.xlsx"):
             msg = QMessageBox()
             msg.setWindowTitle("Database Not Found")
             msg.setText("A valid Database was not found generating test data Standby")
