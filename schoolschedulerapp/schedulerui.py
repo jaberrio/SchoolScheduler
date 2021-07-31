@@ -5,13 +5,14 @@
 # Created by: PyQt5 UI code generator 5.14.1
 #
 # WARNING! All changes made in this file will be lost!
-
+import os
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QDialog
+from PyQt5.QtWidgets import QDialog, QMessageBox
 import sys
 
 import schoolschedulerapp
 from schoolschedulerapp.db_alchemy import *
+from schoolschedulerapp.generatedata import generate_test_data
 from schoolschedulerapp.schedule import generate_schedule
 
 
@@ -31,7 +32,6 @@ class Ui_MainWindow(object):
         self.dropdown.setGeometry(QtCore.QRect(0, 0, 90, 20))
         self.dropdown.setStyleSheet("")
         self.dropdown.setObjectName("dropdown")
-        self.dropdown.addItem("")
         self.dropdown.addItem("")
         self.dropdown.addItem("")
         self.search_edit = QtWidgets.QLineEdit(self.centralwidget)
@@ -406,17 +406,11 @@ class Ui_MainWindow(object):
         self.actionImport_Teachers.setObjectName("actionImport_Teachers")
         self.actionStudents = QtWidgets.QAction(MainWindow)
         self.actionStudents.setObjectName("actionStudents")
-        self.actionTeachers = QtWidgets.QAction(MainWindow)
-        self.actionTeachers.setObjectName("actionTeachers")
-        self.actionCourses = QtWidgets.QAction(MainWindow)
-        self.actionCourses.setObjectName("actionCourses")
         self.actionSettings = QtWidgets.QAction(MainWindow)
         self.actionSettings.setObjectName("actionSettings")
         self.menuImport_Students.addAction(self.actionStudents)
         self.menuImport_Students.addSeparator()
-        self.menuImport_Students.addAction(self.actionTeachers)
         self.menuImport_Students.addSeparator()
-        self.menuImport_Students.addAction(self.actionCourses)
         self.menuImport_Students.addSeparator()
         self.menutoolbar.addAction(self.menuImport_Students.menuAction())
         self.menutoolbar.addAction(self.actionImport_Teachers)
@@ -437,7 +431,7 @@ class Ui_MainWindow(object):
         self.actionStudents.triggered.connect(self.open_input_dialog)
         # called in close input dialog, self.actionStudents.triggered.connect(lambda: self.createFakeDataBase())
         # Change name refactor later TODO
-        self.actionImport_Teachers.triggered.connect(lambda: generate_schedule())
+        self.actionImport_Teachers.triggered.connect(self.open_export_dialog)
         self.list_tree.itemClicked.connect(
             lambda: self.search_by_id_tree_select(self.list_tree.currentItem().text(1)))
         self.list_tree.itemClicked.connect(lambda: print(self.list_tree.currentItem().text(1)))
@@ -447,8 +441,7 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.dropdown.setItemText(0, _translate("MainWindow", "Students"))
-        self.dropdown.setItemText(1, _translate("MainWindow", "Teachers"))
-        self.dropdown.setItemText(2, _translate("MainWindow", "Courses"))
+        self.dropdown.setItemText(1, _translate("MainWindow", "Courses"))
         self.plusbutton.setText(_translate("MainWindow", "+"))
         self.name.setText(_translate("MainWindow", "Name:"))
         self.id.setText(_translate("MainWindow", "ID:"))
@@ -529,8 +522,6 @@ class Ui_MainWindow(object):
         self.menuImport_Students.setTitle(_translate("MainWindow", "Import Students"))
         self.actionImport_Teachers.setText(_translate("MainWindow", "Export Schedules"))
         self.actionStudents.setText(_translate("MainWindow", "Students"))
-        self.actionTeachers.setText(_translate("MainWindow", "Teachers"))
-        self.actionCourses.setText(_translate("MainWindow", "Courses"))
         self.actionSettings.setText(_translate("MainWindow", "Settings"))
 
     def check_box_enabled(self, tf):
@@ -634,6 +625,13 @@ class Ui_MainWindow(object):
         self.grade.setText("Grade: ")
         self.num_credits.setText("Credits: ")
         self.gpa.setText("GPA: ")
+        self.preference1.setText("1. ")
+        self.preference2.setText("2. ")
+        self.preference3.setText("3. ")
+        self.preference4.setText("4. ")
+        self.preference5.setText("5. ")
+        self.preference6.setText("6. ")
+        self.preference7.setText("7. ")
 
     def clear_edit_fields(self):
         self.name_edit.setText("")
@@ -651,7 +649,10 @@ class Ui_MainWindow(object):
 
     def exit_edit_mode(self):
         if self.name_edit.text() != "":
-            self.create_new_student()
+            try:
+                self.create_new_student()
+            except ValueError:
+                self.open_error_dialog()
         self.clear_edit_fields()
         self.hide_edit_elements()
         self.check_box_enabled(False)
@@ -808,6 +809,14 @@ class Ui_MainWindow(object):
         colors_dialog.show()
         
     def open_input_dialog(self):
+
+        if not os.path.isfile("./import/Data.xlsx"):
+            msg = QMessageBox()
+            msg.setWindowTitle("Database Not Found")
+            msg.setText("A valid Database was not found generating test data Standby")
+            msg.exec_()
+            generate_test_data()
+
         import_dialog = QDialog(self)
         import_dialog.setObjectName("Dialog")
         import_dialog.resize(400, 193)
@@ -830,7 +839,57 @@ class Ui_MainWindow(object):
         self.buttonBox.rejected.connect(import_dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(import_dialog)
         import_dialog.show()
-        
+
+    def open_export_dialog(self):
+        if not os.path.isfile("./import/Data.xlsx"):
+            msg = QMessageBox()
+            msg.setWindowTitle("Database Not Found")
+            msg.setText("A valid Database was not found generating test data Standby")
+            msg.exec_()
+            generate_test_data()
+            self.createFakeDataBase()
+
+
+        export_dialog = QDialog(self)
+        export_dialog.setObjectName("Dialog")
+        export_dialog.resize(400, 193)
+        self.buttonBox = QtWidgets.QDialogButtonBox(export_dialog)
+        self.buttonBox.setGeometry(QtCore.QRect(31, 140, 341, 32))
+        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setObjectName("buttonBox")
+        self.label2 = QtWidgets.QLabel(export_dialog)
+        self.label2.setGeometry(QtCore.QRect(28, 28, 331, 16))
+        self.label2.setObjectName("label2")
+        export_dialog.setWindowTitle("Dialog")
+        self.label2.setText('Exported files will be found in the folder named "Export"')
+        self.buttonBox.accepted.connect(export_dialog.accept)
+        self.buttonBox.rejected.connect(export_dialog.reject)
+        export_dialog.accepted.connect(lambda: generate_schedule())
+
+        export_dialog.show()
+
+        # export_dialog.accepted.connect(generate_schedule())
+
+    def open_error_dialog(self):
+        error_dialog = QDialog(self)
+        error_dialog.setObjectName("Dialog")
+        error_dialog.resize(400, 193)
+        self.buttonBox = QtWidgets.QDialogButtonBox(error_dialog)
+        self.buttonBox.setGeometry(QtCore.QRect(31, 140, 341, 32))
+        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setObjectName("buttonBox")
+        self.plainTextEdit = QtWidgets.QPlainTextEdit(error_dialog)
+        self.plainTextEdit.setGeometry(QtCore.QRect(30, 30, 331, 51))
+        self.plainTextEdit.setObjectName("plainTextEdit")
+        error_dialog.setWindowTitle("Dialog")
+        self.plainTextEdit.setPlainText("Error: please ensure first and last name and a unique integer ID have been entered")
+        self.buttonBox.accepted.connect(error_dialog.accept)
+        self.buttonBox.rejected.connect(error_dialog.reject)
+        QtCore.QMetaObject.connectSlotsByName(error_dialog)
+        error_dialog.show()
+
     # Do not Use Deprecated
     def show_student(self, student):
         self.name.setText("Name: " + student.first + " " + student.last)
@@ -905,6 +964,16 @@ class Ui_MainWindow(object):
 
                 classes = Class_History.by_student_id(student.id)
                 index = 0
+
+                self.tableWidget.setHorizontalHeaderItem(0, QtWidgets.QTableWidgetItem("Name"))
+                self.tableWidget.setHorizontalHeaderItem(1, QtWidgets.QTableWidgetItem("Credits"))
+                self.tableWidget.setHorizontalHeaderItem(2, QtWidgets.QTableWidgetItem("Grade"""))
+
+                if len(classes) == 0:
+                    self.tableWidget.setRowCount(3)
+                else:
+                    self.tableWidget.setRowCount(len(classes))
+
                 for c in classes:
                     self.tableWidget.setItem(index, 0, QtWidgets.QTableWidgetItem(c.class_name))
                     self.tableWidget.setItem(index, 1, QtWidgets.QTableWidgetItem(str(c.credit)))
