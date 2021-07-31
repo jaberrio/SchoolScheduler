@@ -15,11 +15,7 @@ Install: pip install SchoolSchedulerApp
 
 Console command: play_scheduler
 
-<h2>How to use program<h2>
-***NOTE Current Beta Modifications***
-Student data is artificially generated upto 100 students for performance until we migrate algorithm to C++
-
-<h2>Release Version<h2>
+<h2>Release Version</h2>
 
 2.02V
 7/31/21
