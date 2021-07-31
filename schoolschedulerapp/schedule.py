@@ -75,9 +75,9 @@ def generate_schedule():
     p_c_c_num = int.from_bytes(c_c_num, byteorder='little')
 
     for x in range(p_c_c_num):
-        Class.insert(int.from_bytes(c_c_id[(4 * x):((4 * x) + 4)], byteorder='little'),
+        Class.insert(int.from_bytes(c_c_id[(4 * x):((4 * x) + 4)], byteorder='little') - 1000,
                      int.from_bytes(c_c_course_id[(4 * x):((4 * x) + 4)], byteorder='little'),
-                     int.from_bytes(c_c_period[(4 * x):((4 * x) + 4)],byteorder='little'))
+                     int.from_bytes(c_c_period[(4 * x):((4 * x) + 4)], byteorder='little'))
     session.commit()
 
     # TODO FIX HARD CODED STUDENT IDs
@@ -85,42 +85,51 @@ def generate_schedule():
     for id in range(1000):
 
         pref = Preference.by_student_id(id)
+        filled = []
         for p in pref:
             for x in range(1, 8):
-                class_id_search = Course.available(p.course_id, x, id)
-                if not class_id_search == -1 and Student.available(id, x):
-                    Schedule.insert(id, class_id_search, x)
-                    break
+                if x not in filled:
+                    class_id_search = Course.available(p.course_id, x, id)
+                    if not class_id_search == -1 and Student.available(id, x):
+                        Schedule.insert(id, class_id_search, x)
+                        filled.append(x)
+                        break
         # Check for empty slots in schedule
         for x in range(1, 8):
-            if Student.available(id, x):
-                Schedule.insert(id, 28, x)
+            if x not in filled:
+                if Student.available(id, x):
+                    Schedule.insert(id, -1, x)
     session.commit()
     generate_pdfs()
+
 
 # Generate PDF schedules
 
 
 def generate_pdfs():
     # pdfmetrics.registerFont(TTFont('DejaVuSans', 'DejaVuSans.ttf'))
-    for x in range(1):
+    for x in range(1000):
         student = Student.by_id(x)
         schedules = Schedule.by_student_id(x)
-        canvas = Canvas(f"export/{student.first}_{x}.pdf", pagesize=(8.5 * inch, 11 * inch / 2))
+        canvas = Canvas(str(schoolschedulerapp.__file__)[0:-12] + f"/export/{student.first}_{x}.pdf", pagesize=(8.5 * inch, 11 * inch / 2))
         y_pos = 330
         canvas.setFont('Helvetica', 16)
         canvas.drawString(60, y_pos, f"{student.first} {student.last}")
         canvas.setFont('Helvetica', 12)
         # fix grade to be in db?
         canvas.drawString(340, y_pos,
-                          f"Student Id: {student.id}    GPA: {student.gpa}    Grade: {math.floor(student.id / 250 + 9)}")
+                          f"Student Id: {student.id}    GPA: {student.gpa}    Grade: {student.grade}")
         data = [("Class Period", "Class Name")]
         for sch in schedules:
             y_pos = y_pos - 36
             print(sch)
-            sch_class = Class.get_name(sch.class_id)
+            sch_class = ""
+            if sch.class_id == -1:
+                sch_class = "Study Hall"
+            else:
+                sch_class = Class.get_name(sch.class_id)
             # canvas.drawString(60, y_pos, f"Period {sch['period']}: {sch_class['name']}")
-            data.append((f"Period {sch.period}", sch_class.name))
+            data.append((f"Period {sch.period}", sch_class))
         table = Table(data, 2 * inch, .325 * inch)
         table.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 12), ('ALIGN', (1, 0), (-1, -1), 'RIGHT'),
                                    ('LEFTPADDING', (1, 0), (-1, -1), 30),

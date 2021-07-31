@@ -93,8 +93,7 @@ class Class(Base):
 
     @staticmethod
     def get_name(id):
-        query = session.query(Course).where(Class.id == Class.by_id(id).course_id)
-        return session.execute(query).scalar().name
+        return Course.by_id(Class.by_id(id).course_id).name
 
     @staticmethod
     def insert(id, course_id, period):
@@ -129,8 +128,10 @@ class Course(Base):
 
     @staticmethod
     def available(id, period, student_id):
+        # id is course_id
+        # need to get classes by course id and period?
         classes = session.execute(
-            session.query(Class).where(Class.id == id).where(Class.period == period)).scalars().all()
+            session.query(Class).where(Class.course_id == id).where(Class.period == period)).scalars().all()
         for c in classes:
             count = session.execute(session.query(func.count(Schedule.id)).where(Schedule.class_id == c.id).where(
                 Schedule.period == period)).scalar()
@@ -159,7 +160,7 @@ class Schedule(Base):
     @staticmethod
     def by_student_id(student_id):
         query = session.query(Schedule).where(Schedule.student_id == student_id)
-        return session.execute(query).all()
+        return session.execute(query).scalars().all()
 
 
 class Preference(Base):
