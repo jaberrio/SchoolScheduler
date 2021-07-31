@@ -9,16 +9,20 @@ Easy PDF export for mass printing
 Keeps Track of Students Graduation Requirement to Recommend schedules
 Easily make modifications using our intuitive UI
 
-pip information TBA
+<h2>pip information:</h2>
 
-How to use program
+Install: pip install SchoolSchedulerApp
+
+Console command: play_scheduler
+
+<h2>How to use program<h2>
 ***NOTE Current Beta Modifications***
 Student data is artificially generated upto 100 students for performance until we migrate algorithm to C++
 
-Release Version
+<h2>Release Version<h2>
 
-1.00V
-6/28/21
+2.02V
+7/31/21
 
 Contributors:
 
