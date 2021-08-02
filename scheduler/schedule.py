@@ -7,6 +7,11 @@ from db import *
 
 # assume that each class offering has the same id but can be multiple periods
 def generate_schedule():
+    generate_classes()
+    generate_schedules()
+    generate_pdfs()
+
+def generate_classes():
     # db.drop_schedules() # TODO: wipe schedule table
 
     # idx = 1
@@ -51,11 +56,11 @@ def generate_schedule():
             insert_class(class_id, item, (x % 7) + 1)
             class_id += 1
 
-    # generate_pdfs()
+    #insert_schedules()
 
     # TODO FIX HARD CODED STUDENT IDs
-
-    for id in range(100):
+def generate_schedules():
+    for id in range(1000):
 
         pref = get_preference(id)
         for p in pref:
@@ -69,12 +74,12 @@ def generate_schedule():
             if check_student_available(id, x):
                 insert_schedule(id, 28, x)
 
-    generate_pdfs()
+    #generate_pdfs()
 
 
 # Generate PDF schedules
 def generate_pdfs():
-    for x in range(100):
+    for x in range(1000):
         student = get_student(x)
         schedules = get_schedules_student(x)
         canvas = Canvas(f"export/{student['first']}_{x}.pdf")

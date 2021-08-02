@@ -77,7 +77,6 @@ def insert_class(class_id, course_id, period):
 
 def insert_schedule(student_id, class_id, period):
     cur.execute(f'INSERT INTO Schedules VALUES ({student_id}, {class_id}, {period})')
-    con.commit()
 
 
 # courses are those that a school offers

@@ -32,6 +32,9 @@ def main():
 if __name__ == '__main__':
     # purge fixes fresh start up bug
     # TODO REMOVE COMMENT OUT TO ALLOW PURGE
+    # generate_schedule()
+    # generate_schedules()
+    # generate_pdfs()
     db_purge()
 
     db_init()
